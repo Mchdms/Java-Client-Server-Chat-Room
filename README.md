@@ -1,7 +1,7 @@
 # Java-Client-Server-Chat-Room
 
 This is a work in progress Chat room program built in Java.
-It is meant purely as a "researh" project (assinged in a programming class)
+It is meant purely as a "research" project (assinged in a programming class)
 
 WIP
 ===========
