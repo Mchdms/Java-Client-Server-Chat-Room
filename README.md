@@ -17,6 +17,7 @@ The port can be set in the servers code.
 TO-DO
 ===========
 High Priority
+
 Organize classes
 
 ChatClient - interface to provide the format for the TextChatClient and the GuiChatClient classes
@@ -27,4 +28,9 @@ ChatServer - starts a server, the server needs to make a new ChatServerThread fo
 ChatServerThread - this is how the server communicates with a client. Accesses the ChatServer arraylist of ChatServerThreads to relay its own client's message to all the other clients.
 
 Medium Priority
+
 Create the GUI interface with Swing.
+
+Low Priority
+
+Quality of Life changes such as setting the port in the gui
