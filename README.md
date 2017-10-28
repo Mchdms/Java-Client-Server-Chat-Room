@@ -7,6 +7,13 @@ WIP
 ===========
 This program is currently a work in progress, and currently only supports one client at a time.
 
+USAGE
+===========
+Compile both ChatClient.java and ChatServer.java in either terminal or command prompt. 
+Run the server from the command line one one computer, and the client on another. 
+The client needs the server's computer IP address and port to connect. 
+The port can be set in the servers code.
+
 TO-DO
 ===========
 High Priority
