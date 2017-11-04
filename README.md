@@ -5,32 +5,23 @@ It is meant purely as a "research" project (assinged in a programming class)
 
 WIP
 ===========
-This program is currently a work in progress, and currently only supports one client at a time.
+This program is currently a work in progress, though most functionality should be in place.
 
 USAGE
 ===========
-Compile both ChatClient.java and ChatServer.java in either terminal or command prompt. 
-Run the server from the command line one one computer, and the client on another. 
-The client needs the server's computer IP address and port to connect. 
-The port can be set in the servers code.
+Compile compile all java files in either terminal or command prompt. 
+Run ChatServer on a computer
+Run ChatClient on a different or the same computer (You can run it on multiple at the same time)
+Enter the required information.
 
 TO-DO
 ===========
 High Priority
-
-Organize classes
-
-ChatClient - interface to provide the format for the TextChatClient and the GuiChatClient classes
-TextChatClient - stores information about the client, has a startConnection method that will that will connect to the server and prompt the user for input until they disconnect.
-GUIChatClient - same as text, but inputs and outputs everything in a GUI
-RunChatClient (ChatClientDriver) - runs a ChatClient by prompting the user if they want text or GUI, asking their name, and asking for the server IP and port, and creating a new TextChatClient or GUIChatClient
-ChatServer - starts a server, the server needs to make a new ChatServerThread for each client that connects. Has an arraylist of each ChatServerThread it has made.
-ChatServerThread - this is how the server communicates with a client. Accesses the ChatServer arraylist of ChatServerThreads to relay its own client's message to all the other clients.
+Extensive Code cleanup
 
 Medium Priority
-
-Create the GUI interface with Swing.
+Add more comments to code
 
 Low Priority
 
-Quality of Life changes such as setting the port in the gui
+Quality of Life changes such as setting the port, name, and IP in the gui
