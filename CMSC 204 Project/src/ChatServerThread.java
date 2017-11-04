@@ -77,7 +77,7 @@ public class ChatServerThread extends Thread{
 						sendMessage("Type /exit to exit the room");
 					}
 				}
-	        	System.out.println("Client: "+clientInput);
+	        	System.out.println("Client "+clientName+": "+clientInput);
 	        	broadcastMessage(clientName+": "+clientInput);
 	        }
 			broadcastMessage(clientName+" has left the chat room.");
