@@ -17,8 +17,8 @@ public class GUIChatClient  extends JFrame implements ChatClient {
 	
 	public static String ServerOutput;
 	String name;
-	private JTextField txtuserWillBe;
-	JTextArea txtpnserverDisplayOf = new JTextArea();
+	private JTextField userInputText;
+	JTextArea displayTextBox = new JTextArea();
 
 	@Override
 	public void startConnection(String ip, int port) {
@@ -64,10 +64,8 @@ public class GUIChatClient  extends JFrame implements ChatClient {
 		Scanner initialInput = new Scanner(System.in);
 		System.out.print("Enter your name: ");
 		name = initialInput.nextLine();
-		ClientGUI.txtpnserverDisplayOf.setText("Enter the ip of the server: ");
 		System.out.print("Enter the ip of the server: ");
 		String ip = initialInput.nextLine();
-		ClientGUI.txtpnserverDisplayOf.setText("Enter the port of the server: ");
 		System.out.print("Enter the port of the server: ");
 		int port = initialInput.nextInt();
 		
@@ -80,10 +78,10 @@ public class GUIChatClient  extends JFrame implements ChatClient {
 		verticalBox.setBounds(10, 11, 414, 206);
 		this.getContentPane().add(verticalBox);
 		
-		txtpnserverDisplayOf.setText("Enter your name: ");
+		displayTextBox.setText("Enter your name: ");
 		//txtpnserverDisplayOf.setBounds(10, 11, 414, 199);
 		//frame.getContentPane().add(txtpnserverDisplayOf);
-		verticalBox.add(txtpnserverDisplayOf);
+		verticalBox.add(displayTextBox);
 		
 		JSeparator separator = new JSeparator();
 		verticalBox.add(separator);
@@ -92,10 +90,10 @@ public class GUIChatClient  extends JFrame implements ChatClient {
 		horizontalBox.setBounds(91, 228, 178, 22);
 		this.getContentPane().add(horizontalBox);
 		
-		txtuserWillBe = new JTextField();
-		txtuserWillBe.setText("#Client Message");
-		horizontalBox.add(txtuserWillBe);
-		txtuserWillBe.setColumns(10);
+		userInputText = new JTextField();
+		userInputText.setText("#Client Message");
+		horizontalBox.add(userInputText);
+		userInputText.setColumns(10);
 		
 		Button button = new Button("Send");
 		button.setBounds(268, 228, 70, 22);
@@ -118,7 +116,7 @@ public class GUIChatClient  extends JFrame implements ChatClient {
 			try {
 				while ((input = inputFromServer.readLine()) != null) {
 		        	System.out.println(input);
-		        	txtpnserverDisplayOf.append(input + "\r\n");
+		        	displayTextBox.append(input + "\r\n");
 		        }
 			} catch (IOException e) {
 				e.printStackTrace();
