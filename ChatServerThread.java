@@ -13,6 +13,8 @@ public class ChatServerThread extends Thread{
 	PrintWriter outputToClient;
     BufferedReader inputFromClient;
     
+    String clientName;
+    
 	Socket clientSocket;
 	
 	private static CopyOnWriteArrayList<ChatServerThread> connections = new CopyOnWriteArrayList<ChatServerThread>();
@@ -44,13 +46,24 @@ public class ChatServerThread extends Thread{
 		
 		String clientInput;
 		try {
-			while (!(clientInput = inputFromClient.readLine()).equalsIgnoreCase("exit")) {
+			clientName = inputFromClient.readLine();
+			while ((clientInput = inputFromClient.readLine()) != null) {
+				if (clientInput.startsWith("/")) {
+					String command = clientInput.substring(1, clientInput.length());
+					if (command.equalsIgnoreCase("exit")) {
+						break;
+					} else {
+						sendMessage("Type /exit to exit the room");
+					}
+				}
 	        	System.out.println("Client: "+clientInput);
-	        	broadcastMessage(clientInput);
+	        	broadcastMessage(clientName+": "+clientInput);
 	        }
+			broadcastMessage(clientName+" has left the chat room.");
 		} catch (IOException e) {
 			e.printStackTrace();
-		} 
+		}
+		
 	}
 
 }

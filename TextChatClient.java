@@ -22,12 +22,21 @@ public class TextChatClient implements ChatClient{
 		    String userInput = "";
 	        String exitToken = "exit";
 	        ServerTextPrinter printInputFromServer = new ServerTextPrinter(clientInputFromServer, exitToken);
+	        //initial protocol
 	        printInputFromServer.start();
+	        clientOutputToServer.println(name);
+	        
+	        //main loop
 	        do {
+	        	if (userInput.startsWith("/")) {
+					String command = userInput.substring(1, userInput.length());
+					if (command.equalsIgnoreCase("exit")) {
+						break;
+					}
+				}
 	        	userInput = userInputToClient.nextLine();
-	        	System.out.println("Typed: "+userInput);
 	        	clientOutputToServer.println(userInput);
-	        } while (!userInput.equals(exitToken));
+	        } while (userInput != null);
 	        
 	        socket.close();
 	        userInputToClient.close();
@@ -53,19 +62,17 @@ public class TextChatClient implements ChatClient{
 	
 	class ServerTextPrinter extends Thread {
 		BufferedReader inputFromServer;
-		String exitToken;
 		
 		public ServerTextPrinter(BufferedReader clientInputFromServer, String exitToken) {
 			inputFromServer = clientInputFromServer;
-			this.exitToken = exitToken;
 			System.out.println("SYSTEM: Created server print thread");
 		}
 		
 		public void run() {
 			String input;
 			try {
-				while (!(input = inputFromServer.readLine()).equalsIgnoreCase(exitToken)) {
-		        	System.out.println("Server: "+ input);
+				while ((input = inputFromServer.readLine()) != null) {
+		        	System.out.println(input);
 		        }
 			} catch (IOException e) {
 				e.printStackTrace();
