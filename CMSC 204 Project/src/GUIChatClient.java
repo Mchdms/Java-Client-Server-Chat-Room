@@ -4,6 +4,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -42,6 +44,7 @@ public class GUIChatClient  extends JFrame implements ChatClient {
 	        //initial protocol
 	        printInputFromServer.start();
 	        clientOutputToServer.println(name);
+	        userInputText.addKeyListener(new GUIKeyListener(clientOutputToServer));
 	        
 	        button.addActionListener(new ActionListener() {
 				@Override
@@ -50,17 +53,21 @@ public class GUIChatClient  extends JFrame implements ChatClient {
 						String command = userInput.substring(1, userInput.length());
 						if (command.equalsIgnoreCase("exit")) {							
 							running = false;
+							System.out.println("Exiting");
 						}
 					}
 					userInput = userInputText.getText();
 					clientOutputToServer.println(userInput);
+					userInputText.setText("");
 					
 				}	        	
 	        });
-	        
+ 
 	        while (running) {
 	        	//run the client
-	        }	        
+	        }
+	        System.out.println("Closing");
+	        //displayTextBox.append("Closing");
 			socket.close();
 	        userInputToClient.close();
 	        System.exit(1);
@@ -73,6 +80,8 @@ public class GUIChatClient  extends JFrame implements ChatClient {
 		
 	}
 	@Override
+	
+	
 	public void initialize() {
 		
 		Scanner initialInput = new Scanner(System.in);
@@ -105,6 +114,7 @@ public class GUIChatClient  extends JFrame implements ChatClient {
         panel.add(inputpanel);
         this.getContentPane().add(BorderLayout.CENTER, panel);
         this.pack();
+        this.setSize(700, 500);
         this.setVisible(true);
         this.setResizable(true);
         userInputText.requestFocus();
@@ -134,6 +144,40 @@ public class GUIChatClient  extends JFrame implements ChatClient {
 			System.out.println("SYSTEM: Ended server print thread");
 		}
 	}
+	/**
+	 * A custom key listener for the GUI. Listens for the user to hit enter. Takes a PrintWriter for output to the server
+	 *
+	 */
+	class GUIKeyListener implements KeyListener{
+		PrintWriter clientOutputToServer;
+        public GUIKeyListener(PrintWriter clientOutputToServerKey) {
+        	clientOutputToServer = clientOutputToServerKey;
+		}
+
+		public void keyTyped(KeyEvent e) {           
+        }
+
+        public void keyPressed(KeyEvent e) {
+           if(e.getKeyCode() == KeyEvent.VK_ENTER){
+
+				if (userInput.startsWith("/")) {
+					String command = userInput.substring(1, userInput.length());
+					if (command.equalsIgnoreCase("exit")) {							
+						running = false;
+						System.out.println("Exiting");
+					}
+				}
+				userInput = userInputText.getText();
+				clientOutputToServer.println(userInput);
+				userInputText.setText("");
+				
+           }
+        }
+
+		public void keyReleased(KeyEvent arg0) {			
+		}
+
+     }
 
 }
 

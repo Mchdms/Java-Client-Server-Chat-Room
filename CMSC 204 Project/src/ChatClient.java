@@ -14,6 +14,10 @@ public interface ChatClient {
 	
 	/**
 	 * Asks the user for a name, server ip and port. Starts a connection with the server.
+	 * The window is then set up.
+	 * The JPanel contains a JScrollPane to allow for all chat messages to be viewed
+	 * The JscrollPane is automatically  updated to be at the bottom.
+	 *
 	 */
 	public void initialize();
     
