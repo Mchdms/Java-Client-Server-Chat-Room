@@ -1,4 +1,7 @@
+import java.awt.BorderLayout;
 import java.awt.Button;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -15,9 +18,9 @@ public class GUIChatClient  extends JFrame implements ChatClient {
 	
 	public static String ServerOutput;
 	String name;
-	private JTextField userInputText;
+	private JTextField userInputText = new JTextField(20);
 	JTextArea displayTextBox = new JTextArea();
-	Button button;
+	JButton button = new JButton("Send");
 	String userInput = "";
 	boolean running = true;
 
@@ -81,37 +84,30 @@ public class GUIChatClient  extends JFrame implements ChatClient {
 		int port = initialInput.nextInt();
 		
 		this.setVisible(true);
-		this.setBounds(100, 100, 450, 300);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.getContentPane().setLayout(null);
 		
-		Box verticalBox = Box.createVerticalBox();
-		verticalBox.setBounds(10, 11, 414, 206);
-		this.getContentPane().add(verticalBox);
-		
-		
-		displayTextBox.setLineWrap(true);
-	    displayTextBox.setEditable(false);
-	    displayTextBox.setVisible(true);
-	    verticalBox.add(displayTextBox);
-		
-		
-		JSeparator separator = new JSeparator();
-		verticalBox.add(separator);
-		
-		Box horizontalBox = Box.createHorizontalBox();
-		horizontalBox.setBounds(91, 228, 178, 22);
-		this.getContentPane().add(horizontalBox);
-		
-		userInputText = new JTextField();
-		userInputText.setText("#Client Message");
-		horizontalBox.add(userInputText);
-		userInputText.setColumns(10);
-		
-		
-		button = new Button("Send");
-		button.setBounds(268, 228, 70, 22);
-		this.getContentPane().add(button);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setOpaque(true);
+        displayTextBox.setWrapStyleWord(true);
+        displayTextBox.setEditable(false);
+        displayTextBox.setFont(Font.getFont(Font.SANS_SERIF));
+        JScrollPane scroller = new JScrollPane(displayTextBox);
+        scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        JPanel inputpanel = new JPanel();
+        inputpanel.setLayout(new FlowLayout());
+        DefaultCaret caret = (DefaultCaret) displayTextBox.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        panel.add(scroller);
+        inputpanel.add(userInputText);
+        inputpanel.add(button);
+        panel.add(inputpanel);
+        this.getContentPane().add(BorderLayout.CENTER, panel);
+        this.pack();
+        this.setVisible(true);
+        this.setResizable(true);
+        userInputText.requestFocus();
 		
 		startConnection(ip, port);
 	}
