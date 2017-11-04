@@ -1,4 +1,6 @@
 import java.awt.Button;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -6,12 +8,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
-import javax.swing.Box;
-import javax.swing.JFrame;
-import javax.swing.JSeparator;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
+import javax.swing.*;
+import javax.swing.text.DefaultCaret;
 
 public class GUIChatClient  extends JFrame implements ChatClient {
 	
@@ -19,6 +17,9 @@ public class GUIChatClient  extends JFrame implements ChatClient {
 	String name;
 	private JTextField userInputText;
 	JTextArea displayTextBox = new JTextArea();
+	Button button;
+	String userInput = "";
+	boolean running = true;
 
 	@Override
 	public void startConnection(String ip, int port) {
@@ -30,7 +31,8 @@ public class GUIChatClient  extends JFrame implements ChatClient {
 				BufferedReader clientInputFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));){
 			
 			Scanner userInputToClient = new Scanner(System.in);
-		    String userInput = "";
+			
+		    
 	        String exitToken = "exit";
 	        ServerTextPrinter printInputFromServer = new ServerTextPrinter(clientInputFromServer, exitToken);
 	        
@@ -38,20 +40,29 @@ public class GUIChatClient  extends JFrame implements ChatClient {
 	        printInputFromServer.start();
 	        clientOutputToServer.println(name);
 	        
-	        //main loop
-	        do {
-	        	if (userInput.startsWith("/")) {
-					String command = userInput.substring(1, userInput.length());
-					if (command.equalsIgnoreCase("exit")) {
-						break;
+	        button.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					if (userInput.startsWith("/")) {
+						String command = userInput.substring(1, userInput.length());
+						if (command.equalsIgnoreCase("exit")) {							
+							running = false;
+						}
 					}
-				}
-	        	userInput = userInputToClient.nextLine();
-	        	clientOutputToServer.println(userInput);
-	        } while (userInput != null);
+					userInput = userInputText.getText();
+					clientOutputToServer.println(userInput);
+					
+				}	        	
+	        });
 	        
-	        socket.close();
+	        while (running) {
+	        	//run the client
+	        }	        
+			socket.close();
 	        userInputToClient.close();
+	        System.exit(1);
+	        
+	        
 		} catch (Exception e) {
 			System.out.println("ERROR");
 			e.printStackTrace();
@@ -64,10 +75,8 @@ public class GUIChatClient  extends JFrame implements ChatClient {
 		Scanner initialInput = new Scanner(System.in);
 		System.out.print("Enter your name: ");
 		name = initialInput.nextLine();
-		displayTextBox.setText("Enter the ip of the server: ");
 		System.out.print("Enter the ip of the server: ");
 		String ip = initialInput.nextLine();
-		displayTextBox.setText("Enter the port of the server: ");
 		System.out.print("Enter the port of the server: ");
 		int port = initialInput.nextInt();
 		
@@ -80,10 +89,12 @@ public class GUIChatClient  extends JFrame implements ChatClient {
 		verticalBox.setBounds(10, 11, 414, 206);
 		this.getContentPane().add(verticalBox);
 		
-		displayTextBox.setText("Enter your name: ");
-		//txtpnserverDisplayOf.setBounds(10, 11, 414, 199);
-		//frame.getContentPane().add(txtpnserverDisplayOf);
-		verticalBox.add(displayTextBox);
+		
+		displayTextBox.setLineWrap(true);
+	    displayTextBox.setEditable(false);
+	    displayTextBox.setVisible(true);
+	    verticalBox.add(displayTextBox);
+		
 		
 		JSeparator separator = new JSeparator();
 		verticalBox.add(separator);
@@ -97,7 +108,8 @@ public class GUIChatClient  extends JFrame implements ChatClient {
 		horizontalBox.add(userInputText);
 		userInputText.setColumns(10);
 		
-		Button button = new Button("Send");
+		
+		button = new Button("Send");
 		button.setBounds(268, 228, 70, 22);
 		this.getContentPane().add(button);
 		
