@@ -4,7 +4,11 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
-
+/**
+ * Text-based chat client. Gets user input and sends it to the server. Prints what the server outputs.
+ * @author Daniel Wunderink, Micah Adams, and David Riadi
+ *
+ */
 public class TextChatClient implements ChatClient{
 	
 	String name;
@@ -60,6 +64,11 @@ public class TextChatClient implements ChatClient{
 		startConnection(ip, port);
 	}
 	
+	/**
+	 * Thread to print server messages. Needs to be in a thread since it is a while loop that prints whenever the server outputs something.
+	 * @author Daniel Wunderink, Micah Adams, and David Riadi
+	 *
+	 */
 	class ServerTextPrinter extends Thread {
 		BufferedReader inputFromServer;
 		
