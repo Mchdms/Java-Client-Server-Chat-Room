@@ -15,17 +15,6 @@ public class RunChatClient {
 		String userInput = input.nextLine();
 		
 		if (userInput.equalsIgnoreCase("G")) {
-			//If the user chooses G, set up swing for the GUI, then create the GUIChatClient
-			EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					try {
-						ClientGUI window = new ClientGUI();
-						window.frame.setVisible(true);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			});
 			client = new GUIChatClient();
 		} else {
 			client = new TextChatClient();

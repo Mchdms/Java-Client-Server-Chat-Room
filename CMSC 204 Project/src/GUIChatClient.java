@@ -9,14 +9,16 @@ import java.util.Scanner;
 import javax.swing.Box;
 import javax.swing.JFrame;
 import javax.swing.JSeparator;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 
-public class GUIChatClient implements ChatClient{
+public class GUIChatClient  extends JFrame implements ChatClient {
 	
 	public static String ServerOutput;
 	String name;
-	
+	private JTextField txtuserWillBe;
+	JTextArea txtpnserverDisplayOf = new JTextArea();
 
 	@Override
 	public void startConnection(String ip, int port) {
@@ -31,6 +33,8 @@ public class GUIChatClient implements ChatClient{
 		    String userInput = "";
 	        String exitToken = "exit";
 	        ServerTextPrinter printInputFromServer = new ServerTextPrinter(clientInputFromServer, exitToken);
+	        
+	        //initial protocol
 	        printInputFromServer.start();
 	        clientOutputToServer.println(name);
 	        
@@ -67,6 +71,36 @@ public class GUIChatClient implements ChatClient{
 		System.out.print("Enter the port of the server: ");
 		int port = initialInput.nextInt();
 		
+		this.setVisible(true);
+		this.setBounds(100, 100, 450, 300);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.getContentPane().setLayout(null);
+		
+		Box verticalBox = Box.createVerticalBox();
+		verticalBox.setBounds(10, 11, 414, 206);
+		this.getContentPane().add(verticalBox);
+		
+		txtpnserverDisplayOf.setText("Enter your name: ");
+		//txtpnserverDisplayOf.setBounds(10, 11, 414, 199);
+		//frame.getContentPane().add(txtpnserverDisplayOf);
+		verticalBox.add(txtpnserverDisplayOf);
+		
+		JSeparator separator = new JSeparator();
+		verticalBox.add(separator);
+		
+		Box horizontalBox = Box.createHorizontalBox();
+		horizontalBox.setBounds(91, 228, 178, 22);
+		this.getContentPane().add(horizontalBox);
+		
+		txtuserWillBe = new JTextField();
+		txtuserWillBe.setText("#Client Message");
+		horizontalBox.add(txtuserWillBe);
+		txtuserWillBe.setColumns(10);
+		
+		Button button = new Button("Send");
+		button.setBounds(268, 228, 70, 22);
+		this.getContentPane().add(button);
+		
 		startConnection(ip, port);
 	}
 	
@@ -84,7 +118,7 @@ public class GUIChatClient implements ChatClient{
 			try {
 				while ((input = inputFromServer.readLine()) != null) {
 		        	System.out.println(input);
-		        	ClientGUI.txtpnserverDisplayOf.append(input + "\r\n");
+		        	txtpnserverDisplayOf.append(input + "\r\n");
 		        }
 			} catch (IOException e) {
 				e.printStackTrace();
