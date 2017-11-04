@@ -81,6 +81,7 @@ public class ChatServerThread extends Thread{
 	        	broadcastMessage(clientName+": "+clientInput);
 	        }
 			broadcastMessage(clientName+" has left the chat room.");
+			System.out.println(clientName + " has left the chat room");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
