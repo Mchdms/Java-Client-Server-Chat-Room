@@ -44,18 +44,13 @@ public class GUIChatClient  extends JFrame implements ChatClient {
 	        //initial protocol
 	        printInputFromServer.start();
 	        clientOutputToServer.println(name);
+	        
 	        userInputText.addKeyListener(new GUIKeyListener(clientOutputToServer));
 	        
 	        button.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					if (userInput.startsWith("/")) {
-						String command = userInput.substring(1, userInput.length());
-						if (command.equalsIgnoreCase("exit")) {							
-							running = false;
-							System.out.println("Exiting");
-						}
-					}
+					
 					userInput = userInputText.getText();
 					clientOutputToServer.println(userInput);
 					userInputText.setText("");
@@ -64,14 +59,16 @@ public class GUIChatClient  extends JFrame implements ChatClient {
 	        });
  
 	        while (running) {
-	        	//run the client
+	        	System.out.println();
+	        	if(userInput.equalsIgnoreCase("/exit")){
+	        		System.out.println("Closing");
+
+	    			socket.close();
+	    	        userInputToClient.close();
+	    	        System.exit(1);
+	        		
+	        	}
 	        }
-	        System.out.println("Closing");
-	        //displayTextBox.append("Closing");
-			socket.close();
-	        userInputToClient.close();
-	        System.exit(1);
-	        
 	        
 		} catch (Exception e) {
 			System.out.println("ERROR");
