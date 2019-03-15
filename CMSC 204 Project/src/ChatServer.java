@@ -8,6 +8,11 @@ import java.lang.ClassNotFoundException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+
+
+import java.net.InetAddress;
+import java.net.SocketException;
+
 /**
  * Main chat server class. Listens for connections, and creates a new ChatServerThread for each client that connects to the server socket.
  * @author Daniel Wunderink, Micah Adams, and David Riadi
@@ -18,9 +23,10 @@ public class ChatServer {
     //static ServerSocket variable
     private static ServerSocket server;
     //socket server port on which it will listen
-    private static int port = 12345;
+    private static int port = 12345;    
     
     public static void main(String args[]) {
+    	ServerThreadList serverThreads = new ServerThreadList();
     	try {
     		//create the socket server object
     		server = new ServerSocket(port);
@@ -29,12 +35,16 @@ public class ChatServer {
                 System.out.println("Waiting for client request");
                 //creating socket and waiting for client connection
                 Socket clientSocket = server.accept();
-                (new ChatServerThread(clientSocket)).start();
+                (new ChatServerThread(clientSocket, serverThreads)).start();
             }
     	} catch (IOException e){
     		e.printStackTrace();
     	}
         
+    }
+    
+    public ChatServer(int port, ServerListener listener) {
+    	
     }
 
 }

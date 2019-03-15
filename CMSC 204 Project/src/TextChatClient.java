@@ -1,6 +1,8 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
@@ -17,19 +19,24 @@ public class TextChatClient implements ChatClient{
 	public void startConnection(String ip, int port) {
 		try(//new socket for the server
 				Socket socket = new Socket(ip, port);
-                //Create a PrintWriter to write what the client says to the server
-				PrintWriter clientOutputToServer = new PrintWriter(socket.getOutputStream(), true);
-				//Create a BufferedReader to read what the server says
-				BufferedReader clientInputFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));){
+//                //Create a PrintWriter to write what the client says to the server
+//				PrintWriter clientOutputToServer = new PrintWriter(socket.getOutputStream(), true);
+//				//Create a BufferedReader to read what the server says
+//				BufferedReader clientInputFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+				
+				ObjectOutputStream os = new ObjectOutputStream(socket.getOutputStream());
+				ObjectInputStream is = new ObjectInputStream(socket.getInputStream());
+			){
 			
 			Scanner userInputToClient = new Scanner(System.in);
 		    String userInput = "";
 	        String exitToken = "exit";
-	        ServerTextPrinter printInputFromServer = new ServerTextPrinter(clientInputFromServer, exitToken);
+	        //ServerTextPrinter printInputFromServer = new ServerTextPrinter(clientInputFromServer, exitToken);
+	        ServerTextPrinter printInputFromServer = new ServerTextPrinter(is, exitToken);
 	        //initial protocol
 	        printInputFromServer.start();
-	        clientOutputToServer.println(name);
-	        
+//	        clientOutputToServer.println(name);
+	        os.writeObject(new DummyObjectToSend(name));
 	        //main loop
 	        do {
 	        	if (userInput.startsWith("/")) {
@@ -39,9 +46,11 @@ public class TextChatClient implements ChatClient{
 					}
 				}
 	        	userInput = userInputToClient.nextLine();
-	        	clientOutputToServer.println(userInput);
+//	        	clientOutputToServer.println(userInput);
+		        os.writeObject(new DummyObjectToSend(userInput));
 	        } while (userInput != null);
 	        
+	        is.readObject();
 	        socket.close();
 	        userInputToClient.close();
 		} catch (Exception e) {
@@ -70,20 +79,28 @@ public class TextChatClient implements ChatClient{
 	 *
 	 */
 	class ServerTextPrinter extends Thread {
-		BufferedReader inputFromServer;
+//		BufferedReader inputFromServer;
+		ObjectInputStream inputFromServer;
 		
-		public ServerTextPrinter(BufferedReader clientInputFromServer, String exitToken) {
+//		public ServerTextPrinter(BufferedReader clientInputFromServer, String exitToken) {
+//			inputFromServer = clientInputFromServer;
+//			System.out.println("SYSTEM: Created server print thread");
+//		}
+		
+		public ServerTextPrinter(ObjectInputStream clientInputFromServer, String exitToken) {
 			inputFromServer = clientInputFromServer;
 			System.out.println("SYSTEM: Created server print thread");
 		}
 		
 		public void run() {
-			String input;
+//			String input;
+			Object input;
 			try {
-				while ((input = inputFromServer.readLine()) != null) {
-		        	System.out.println(input);
+//				while ((input = inputFromServer.readLine()) != null) {
+				while ((input = inputFromServer.readObject()) != null) {
+		        	System.out.println(((DummyObjectToSend) input).message);
 		        }
-			} catch (IOException e) {
+			} catch (IOException | ClassNotFoundException e) {
 				e.printStackTrace();
 			}
 			System.out.println("SYSTEM: Ended server print thread");
